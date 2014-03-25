@@ -46,8 +46,8 @@ module CommandChain
       CommandChain.api_not_implemented(self)
     end
 
-    def assert
-      raise StandardError.new("Assertion failed") unless yield
+    def assert(assertion = nil)
+      raise StandardError.new("Assertion failed: #{assertion}") unless yield
     end
   end
 end

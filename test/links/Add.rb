@@ -9,9 +9,18 @@ module CommandChain
 		end
 
 		def validate_inputs
-			assert { @state.keys.include?("numbers") }
-			assert { @state['numbers'].class == Array }
-			assert { @state['numbers'].length > 0 }
+			assert "state must include numbers" do
+				@state.keys.include?("numbers")
+			end
+
+			assert "numbers must be an array" do
+				@state['numbers'].class == Array
+			end
+
+			assert "numbers array must not be empty" do 
+				@state['numbers'].length > 0
+			end
+
 			@logger.info "Validated", {:state => @state}
 		rescue StandardError => e
 			raise ValidateError.new(e.message)
@@ -29,8 +38,26 @@ module CommandChain
 		end
 
 		def validate_outputs
-			validate_inputs
-			assert { @state.keys.include?("sum") }
+			assert "state must include numbers" do
+				@state.keys.include?("numbers")
+			end
+
+			assert "numbers must be an array" do
+				@state['numbers'].class == Array
+			end
+
+			assert "numbers array must not be empty" do 
+				@state['numbers'].length > 0
+			end
+
+			assert "state must include sum" do 
+				@state.keys.include?("sum")
+			end
+
+			assert "sum must be a Fixnum" do
+				@state['sum'].class == Fixnum
+			end
+			
 			@logger.info "Validated", {:state => @state}
 		rescue StandardError => e
 			raise ValidateError.new(e.message)

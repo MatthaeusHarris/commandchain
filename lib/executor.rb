@@ -13,6 +13,8 @@ module CommandChain
       @chain = chain
       @state = initial_state
 
+      @logger.info "Creating chain", {:chain => chain}
+
       chain.each do |link|
         require_relative File.join('..', links_glob, link)
         @links << link
@@ -21,6 +23,7 @@ module CommandChain
 
     def run!
       @links.each do |link|
+        @logger.info "Processing new link", {:link => link}
         link_instance = CommandChain.const_get(link).new(@state)
         begin
           link_instance.validate_inputs
@@ -30,10 +33,12 @@ module CommandChain
           puts e.message
           puts e.backtrace.inspect
           link_instance.unexecute
+          raise e
         rescue ValidateError => e
           puts e.message
           puts e.backtrace.inspect
           link_instance.unexecute
+          raise e
         end
       end
     end
