@@ -1,3 +1,5 @@
+require 'json'
+
 class Logger
 	def info(string, object={})
     if string.class == Hash
@@ -9,7 +11,14 @@ class Logger
 
 	def format(string, object)
 		object.each do |key, value|
-      string << " #{key}=#{value}"
+      case value
+      when Hash
+        string << "#{key}=#{value.to_json}"
+      when Array
+        string << "#{key}=#{value.to_json}"
+      else
+        string << " #{key}=#{value}"
+      end
     end
 
     string

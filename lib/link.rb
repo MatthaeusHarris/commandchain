@@ -21,6 +21,12 @@ end
 
 module CommandChain
 
+  class ExecuteError < StandardError
+  end
+
+  class ValidateError < StandardError
+  end
+
   class Link
     include AbstractInterface
 
@@ -38,6 +44,10 @@ module CommandChain
 
     def unexecute
       CommandChain.api_not_implemented(self)
+    end
+
+    def assert
+      raise StandardError.new("Assertion failed") unless yield
     end
   end
 end

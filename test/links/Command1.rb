@@ -1,8 +1,8 @@
-require_relative '../link'
-require_relative '../logger'
+require_relative '../../lib/link'
+require_relative '../../lib/logger'
 
 module CommandChain
-  class Command1 < CommandChain
+  class Command1 < Link
     def initialize(state)
       @logger = Logger.new
       @state = state
@@ -18,7 +18,7 @@ module CommandChain
 
     def execute
       @logger.info "Command1 class executing"
-      state
+      @state
     end
 
     def unexecute
