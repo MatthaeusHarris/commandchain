@@ -13,9 +13,9 @@ class Logger
 		object.each do |key, value|
       case value
       when Hash
-        string << "#{key}=#{value.to_json}"
+        string << " #{key}=#{value.to_json}"
       when Array
-        string << "#{key}=#{value.to_json}"
+        string << " #{key}=#{value.to_json}"
       else
         string << " #{key}=#{value}"
       end

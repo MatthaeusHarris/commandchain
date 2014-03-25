@@ -57,14 +57,16 @@ module CommandChain
 			assert "sum must be a Fixnum" do
 				@state['sum'].class == Fixnum
 			end
-			
+
 			@logger.info "Validated", {:state => @state}
 		rescue StandardError => e
 			raise ValidateError.new(e.message)
 		end
 
-		def unexecute
-			@logger.info "Unexecute impossible"
+		def unexecute(state)
+			@logger.info "Unexecute add"
+			state.delete('sum')
+			state
 		end
 	end
 end

@@ -12,6 +12,7 @@ module CommandChain
       @links = []
       @chain = chain
       @state = initial_state
+      @stack = []
 
       @logger.info "Creating chain", {:chain => chain}
 
@@ -27,17 +28,35 @@ module CommandChain
         link_instance = CommandChain.const_get(link).new(@state)
         begin
           link_instance.validate_inputs
-          @state = link_instance.execute
+          new_state = link_instance.execute
+          @state = new_state
+          @stack.push link_instance
           link_instance.validate_outputs
+
         rescue ExecuteError => e
           puts e.message
-          puts e.backtrace.inspect
-          link_instance.unexecute
+          puts e.backtrace
           raise e
+
         rescue ValidateError => e
           puts e.message
-          puts e.backtrace.inspect
-          link_instance.unexecute
+          puts e.backtrace
+          raise e
+        end
+      end
+    rescue StandardError
+      rollback!
+    end
+
+    def rollback!
+      @logger.info "Rolling back", {:stack => @stack, :state => @state}
+      while link_instance = @stack.pop do
+        begin
+          @state = link_instance.unexecute(@state)
+        rescue ExecuteError => e
+          puts e.message
+          puts e.backtrace
+          @logger.info "Aborting unexecute", {:stack => @stack}
           raise e
         end
       end

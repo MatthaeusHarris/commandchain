@@ -76,8 +76,10 @@ module CommandChain
 			raise ValidateError.new(e.message)
 		end
 
-		def unexecute
-			@logger.info "Unexecute impossible"
+		def unexecute(state)
+			@logger.info "unexecute average"
+			state.delete('average')
+			state
 		end
 	end
 end
